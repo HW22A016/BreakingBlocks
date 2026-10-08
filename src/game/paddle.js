@@ -2,7 +2,7 @@ export class Paddle
 {
     constructor(x, y, width, height, speed, color)
     {
-        this.x = x;
+        this.x = x - Math.round(width / 2);
         this.y = y;
         this.width = width;
         this.height = height;

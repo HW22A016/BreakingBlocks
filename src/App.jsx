@@ -18,7 +18,7 @@ function App() {
     const canvas = canvasRef.current;
     if(paddleRef.current === null)
     {
-      paddleRef.current = new Paddle(300, 550, 100, 15, 5, "white");
+      paddleRef.current = new Paddle(Math.round(canvas.width / 2), canvas.height - 40, Math.round(canvas.width * 0.15), 10, 5, "white");
     }
     if(gameControllerRef.current === null)
     {
@@ -39,8 +39,8 @@ function App() {
     <div>
       <canvas
         ref={canvasRef}
-        width={800}
-        height={600}/>
+        width={400}
+        height={500}/>
     </div>
   );
 }
