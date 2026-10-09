@@ -35,7 +35,7 @@ function App() {
       const radius = 6;
       const speed = 1.5;
       const degree = Math.random() * (135 - 45) + 45;
-      ballRef.current = new Ball(x, y, radius, speed, degree);
+      ballRef.current = new Ball(x, y, radius, speed, degree, canvas.width, canvas.height);
     }
     
     if(!gameControllerRef.current)

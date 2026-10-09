@@ -1,20 +1,55 @@
 export class Ball
 {
-    constructor(x, y, radius, speed, degrees)
+    constructor(x, y, radius, speed, degrees, canvasWidth, canvasHeight)
     {
         this.x = x;
         this. y = y;
         this.radius = radius;
         this. speed = speed;
-        this.degrees = degrees
-        this.radian = this.radian(degrees)
+        this.degrees = degrees;
+        this.radian = this.toRadian(degrees);
+        // 移動量
+        this.dx = Math.cos(this.radian);
+        this.dy = Math.sin(this.radian);
+        this.canvasWidth = canvasWidth;
+        this.canvasHeight = canvasHeight;
+    }
+
+    toRadian(degrees)
+    {
+        return degrees * (Math.PI / 180)
+    }
+
+    reflection(degrees)
+    {
+        this.degrees = degrees;
+        this.radian = this.toRadian(this.degrees);
         this.dx = Math.cos(this.radian);
         this.dy = Math.sin(this.radian);
     }
 
-    radian(degrees)
+    move()
     {
-        return degrees * (Math.PI / 180)
+        this.x += this.dx * this.speed;
+        if(this.x - this.radius < 0)
+        {
+            this.x = this.radius;
+
+            this.reflection(180 - this.degrees)
+        }
+        else if(this.canvasWidth < this.x + this.radius)
+        {
+            this.x = this.canvasWidth - this.radius;
+
+            this.reflection(180 - this.degrees)
+        }
+        this.y -= this.dy * this.speed;
+        if(this.y - this.radius < 0)
+        {
+            this.y = this.radius;
+
+            this.reflection(360 - this.degrees)
+        }
     }
 
     draw(ctx)
@@ -24,12 +59,5 @@ export class Ball
         ctx.fillStyle = "white";
         ctx.fill();
         ctx.closePath();
-    }
-
-    move()
-    {
-        console.log(this.degrees, this.dx, this.dy);
-        this.x += this.dx * this.speed;
-        this.y -= this.dy * this.speed;
     }
 }
