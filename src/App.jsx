@@ -18,14 +18,12 @@ function App() {
     const canvas = canvasRef.current;
     if(paddleRef.current === null)
     {
-      paddleRef.current = new Paddle(Math.round(canvas.width / 2), canvas.height - 40, Math.round(canvas.width * 0.15), 10, 5, "white");
+      paddleRef.current = new Paddle(Math.round(canvas.width / 2), canvas.height - 40, Math.round(canvas.width * 0.15), 10, 5, "white", canvas.width);
     }
     if(gameControllerRef.current === null)
     {
       gameControllerRef.current = new GameController(canvas, paddleRef.current, "black");
     }
-
-    gameControllerRef.current.draw();
 
     gameControllerRef.current.start();
 

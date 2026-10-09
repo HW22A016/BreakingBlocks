@@ -1,6 +1,6 @@
 export class Paddle
 {
-    constructor(x, y, width, height, speed, color)
+    constructor(x, y, width, height, speed, color, canvasWidth)
     {
         this.x = x - Math.round(width / 2);
         this.y = y;
@@ -8,6 +8,7 @@ export class Paddle
         this.height = height;
         this.speed = speed;
         this.color = color;
+        this.canvasWidth = canvasWidth - width;
     }
 
     draw(ctx)
@@ -27,11 +28,19 @@ export class Paddle
         if(direction === "left")
         {
             this.x -= this.speed;
+            if(this.x < 0)
+            {
+                this.x = 0;
+            }
         }
 
         if(direction === "right")
         {
             this.x += this.speed;
+            if(this.canvasWidth < this.x)
+            {
+                this.x = this.canvasWidth;
+            }
         }
     }
 }
