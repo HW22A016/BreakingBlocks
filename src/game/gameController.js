@@ -1,10 +1,11 @@
 export class GameController
 {
-    constructor(canvas, paddle, color)
+    constructor(canvas, paddle, ball, color)
     {
         this.canvas = canvas;
         this.ctx = canvas.getContext("2d");
         this.paddle = paddle;
+        this.ball = ball;
         this.color = color;
 
         this.keys = {
@@ -51,6 +52,7 @@ export class GameController
 
         // paddleの描画
         this.paddle.draw(this.ctx);
+        this.ball.draw(this.ctx);
     }
 
     gameLoop()
@@ -63,6 +65,7 @@ export class GameController
       {
         this.paddle.move("right");
       }
+      this.ball.move();
 
       this.draw();
 
