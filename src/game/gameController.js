@@ -5,6 +5,7 @@ export class GameController
         this.canvas = canvas;
         this.ctx = canvas.getContext("2d");
         this.paddle = paddle;
+        this.paddleHitboxMargin = 10;
         this.ball = ball;
         this.color = color;
 
@@ -55,13 +56,30 @@ export class GameController
         this.ball.draw(this.ctx);
     }
 
+    calculationPaddleReflectionDegrees(ball)
+    {
+      // paddleの遊びを持たせたpaddleの長さ
+      const paddleRightPos = this.paddle.x + this.paddle.width + this.paddleHitboxMargin;
+      // paddleに遊びを持たせた時の長さ
+      const paddleLength = this.paddle.width + this.paddleHitboxMargin * 2;
+      // paddleのどのあたりに当たったかの割合
+      const paddleRatio = (paddleRightPos - ball.x) / paddleLength;
+      // ボールを返す角度(10度~170度)
+      const degrees = paddleRatio * 160 + 10;
+
+      return degrees;
+    }
+
     hitPaddle(ball)
     {
+      // paddleと高さが同じか
       if(this.paddle.y <= ball.y + ball.radius && ball.y + ball.radius <=  this.paddle.y + this.paddle.height)
       {
-        if(this.paddle.x - 10 <= ball.x && ball.x <= this.paddle.x + this.paddle.width + 10)
+        // paddleの長さと同じx座標にballがあるか
+        if(this.paddle.x - this.paddleHitboxMargin <= ball.x && ball.x <= this.paddle.x + this.paddle.width + this.paddleHitboxMargin)
         {
-          ball.reflection(360 - this.ball.degrees);
+          // ball.reflection(360 - ball.degrees);
+          ball.reflection(this.calculationPaddleReflectionDegrees(ball));
           ball.y = this.paddle.y - 10;
         }
       }
@@ -69,6 +87,7 @@ export class GameController
 
     gameLoop()
     {
+      // paddleの移動入力
       if(this.keys.left)
       {
         this.paddle.move("left");
@@ -77,6 +96,7 @@ export class GameController
       {
         this.paddle.move("right");
       }
+
       this.ball.move();
 
       this.hitPaddle(this.ball);
