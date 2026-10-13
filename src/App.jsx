@@ -7,6 +7,7 @@ import './App.css'
 import { GameController } from "./game/gameController";
 import { Paddle } from "./game/paddle";
 import { Ball } from "./game/ball";
+
 function App() {
   // canvasRef = { current: null};を作る
   const canvasRef = useRef(null);

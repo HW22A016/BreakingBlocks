@@ -23,6 +23,10 @@ export class Ball
     reflection(degrees)
     {
         this.degrees = degrees;
+        if(360 <= this.degrees)
+        {
+            this.degrees %= 360;
+        }
         this.radian = this.toRadian(this.degrees);
         this.dx = Math.cos(this.radian);
         this.dy = Math.sin(this.radian);
@@ -31,12 +35,14 @@ export class Ball
     move()
     {
         this.x += this.dx * this.speed;
+        // 左壁との衝突判定
         if(this.x - this.radius < 0)
         {
             this.x = this.radius;
 
             this.reflection(180 - this.degrees)
         }
+        // 右壁との衝突判定
         else if(this.canvasWidth < this.x + this.radius)
         {
             this.x = this.canvasWidth - this.radius;
@@ -44,6 +50,7 @@ export class Ball
             this.reflection(180 - this.degrees)
         }
         this.y -= this.dy * this.speed;
+        // 天井の衝突判定
         if(this.y - this.radius < 0)
         {
             this.y = this.radius;

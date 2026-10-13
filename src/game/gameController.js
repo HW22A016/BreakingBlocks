@@ -55,6 +55,18 @@ export class GameController
         this.ball.draw(this.ctx);
     }
 
+    hitPaddle(ball)
+    {
+      if(this.paddle.y <= ball.y + ball.radius && ball.y + ball.radius <=  this.paddle.y + this.paddle.height)
+      {
+        if(this.paddle.x - 10 <= ball.x && ball.x <= this.paddle.x + this.paddle.width + 10)
+        {
+          ball.reflection(360 - this.ball.degrees);
+          ball.y = this.paddle.y - 10;
+        }
+      }
+    }
+
     gameLoop()
     {
       if(this.keys.left)
@@ -66,6 +78,8 @@ export class GameController
         this.paddle.move("right");
       }
       this.ball.move();
+
+      this.hitPaddle(this.ball);
 
       this.draw();
 
