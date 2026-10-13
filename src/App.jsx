@@ -7,6 +7,7 @@ import './App.css'
 import { GameController } from "./game/gameController";
 import { Paddle } from "./game/paddle";
 import { Ball } from "./game/ball";
+import { Block } from './game/block';
 
 function App() {
   // canvasRef = { current: null};を作る
@@ -14,10 +15,12 @@ function App() {
   const gameControllerRef = useRef(null);
   const paddleRef = useRef(null);
   const ballRef = useRef(null);
+  const blocksRef = useRef([]);
 
   // Startみたいなもの
   useEffect(() => {
     const canvas = canvasRef.current;
+    // paddleClass
     if(!paddleRef.current)
     {
       const x = Math.round(canvas.width / 2);
@@ -29,6 +32,7 @@ function App() {
       paddleRef.current = new Paddle(x, y, width, height, speed, color, canvas.width);
     }
 
+    // ballClass
     if(!ballRef.current)
     {
       const x = canvas.width / 2;
@@ -38,10 +42,24 @@ function App() {
       const degree = Math.random() * (135 - 45) + 45;
       ballRef.current = new Ball(x, y, radius, speed, degree, canvas.width, canvas.height);
     }
+
+    // blockClass
+    if(blocksRef.current.length === 0)
+    {
+      for(let i = 1; i <= 5; i++)
+      {
+        const x = canvas.width / 5 * i;
+        for(let j = 1; j <= 3; j++)
+        {
+          blocksRef.current.push(new Block(x, 20 * j, 10, 10, "white"));
+        }
+      }
+    }
     
+    // gameControllerClass
     if(!gameControllerRef.current)
     {
-      gameControllerRef.current = new GameController(canvas, paddleRef.current, ballRef.current, "black");
+      gameControllerRef.current = new GameController(canvas, paddleRef.current, ballRef.current, blocksRef.current, "black");
     }
 
     gameControllerRef.current.start();
