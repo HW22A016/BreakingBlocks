@@ -46,12 +46,26 @@ function App() {
     // blockClass
     if(blocksRef.current.length === 0)
     {
-      for(let i = 1; i <= 5; i++)
+      const rows = Math.round(canvas.width / 80);
+      const cols = Math.round(canvas.height / 30);
+      const blockHeight = 10;
+      // 間の空白
+      const gap = 5;
+
+      // 横の空白
+      const margin = canvas.width / 10;
+      // 横幅に余裕を持たせた時に使えるpx数 / 横に配置するブロックの数
+      const blockWidth = (canvas.width - margin * 2  -  gap * rows) / rows;
+
+      const startX = margin;
+      const startY = 30;
+      for(let i = 0; i < rows; i++)
       {
-        const x = canvas.width / 5 * i;
-        for(let j = 1; j <= 3; j++)
+        const x = startX + i * (blockWidth + gap);
+        for(let j = 0; j < cols; j++)
         {
-          blocksRef.current.push(new Block(x, 20 * j, 10, 10, "white"));
+          const y = startY + j * (blockHeight + gap);
+          blocksRef.current.push(new Block(x, y, blockWidth, blockHeight, "white"));
         }
       }
     }
@@ -74,8 +88,8 @@ function App() {
     <div>
       <canvas
         ref={canvasRef}
-        width={400}
-        height={500}/>
+        width={800}
+        height={600}/>
     </div>
   );
 }
