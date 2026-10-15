@@ -50,7 +50,7 @@ function App() {
       const cols = Math.round(canvas.height / 30);
       const blockHeight = 10;
       // 間の空白
-      const gap = 5;
+      const gap = 3;
 
       // 横の空白
       const margin = canvas.width / 10;
@@ -88,7 +88,7 @@ function App() {
     <div>
       <canvas
         ref={canvasRef}
-        width={800}
+        width={400}
         height={600}/>
     </div>
   );
