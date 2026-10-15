@@ -1,6 +1,6 @@
 export class Ball
 {
-    constructor(x, y, radius, speed, degrees, canvasWidth, canvasHeight)
+    constructor(x, y, radius, speed, degrees, atk, canvasWidth, canvasHeight)
     {
         this.x = x;
         this. y = y;
@@ -8,6 +8,7 @@ export class Ball
         this. speed = speed;
         this.degrees = degrees;
         this.radian = this.toRadian(degrees);
+        this.atk = atk;
         // 移動量
         this.dx = Math.cos(this.radian);
         this.dy = Math.sin(this.radian);

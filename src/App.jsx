@@ -38,9 +38,10 @@ function App() {
       const x = canvas.width / 2;
       const y = canvas.height - 60;
       const radius = 6;
-      const speed = 2.5;
+      const speed = canvas.height / 200;
       const degree = Math.random() * (135 - 45) + 45;
-      ballRef.current = new Ball(x, y, radius, speed, degree, canvas.width, canvas.height);
+      const atk = 1;
+      ballRef.current = new Ball(x, y, radius, speed, degree, atk, canvas.width, canvas.height);
     }
 
     // blockClass
@@ -65,7 +66,8 @@ function App() {
         for(let j = 0; j < cols; j++)
         {
           const y = startY + j * (blockHeight + gap);
-          blocksRef.current.push(new Block(x, y, blockWidth, blockHeight, "white"));
+          const hp = Math.floor(Math.random() * 2 + 1);
+          blocksRef.current.push(new Block(x, y, blockWidth, blockHeight, hp));
         }
       }
     }

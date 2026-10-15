@@ -1,17 +1,32 @@
 export class Block
 {
-    constructor(x, y, width, height, color)
+    constructor(x, y, width, height, hp)
     {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
-        this.color = color;
+        this.hp = hp;
+
+        this.type = null;
+        this.item = null;
+    }
+
+    takeDamage(damage)
+    {
+        this.hp -= damage;
     }
 
     draw(ctx)
     {
-        ctx.fillStyle = this.color;
+        switch(this.hp)
+        {
+            case 1:
+                ctx.fillStyle = "red";
+                break;
+            case 2:
+                ctx.fillStyle = "green";
+        }
 
         ctx.fillRect(
             this.x,

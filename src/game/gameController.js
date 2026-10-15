@@ -76,16 +76,16 @@ export class GameController
       return degrees;
     }
 
-    hitPaddle(ball)
+    hitPaddle(paddle, ball)
     {
       // paddleと高さが同じか
-      if(this.paddle.y <= ball.y + ball.radius && ball.y + ball.radius <=  this.paddle.y + this.paddle.height)
+      if(paddle.y <= ball.y + ball.radius && ball.y + ball.radius <=  paddle.y + paddle.height)
       {
         // paddleの長さと同じx座標にballがあるか
-        if(this.paddle.x - this.paddleHitboxMargin <= ball.x && ball.x <= this.paddle.x + this.paddle.width + this.paddleHitboxMargin)
+        if(paddle.x - this.paddleHitboxMargin <= ball.x && ball.x <= paddle.x + paddle.width + this.paddleHitboxMargin)
         {
           ball.reflection(this.calculationPaddleReflectionDegrees(ball));
-          ball.y = this.paddle.y - 10;
+          ball.y = paddle.y - 10;
         }
       }
     }
@@ -95,34 +95,36 @@ export class GameController
       for(let i = this.blocks.length - 1; 0 <= i; i--)
       {
         let block = this.blocks[i];
-        // 上下の判定
-        if(block.y <= ball.y + ball.radius && ball.y - ball.radius <= block.y + block.height)
+        if(block.y <= ball.y + ball.radius && ball.y - ball.radius <= block.y + block.height && block.x <= ball.x + ball.radius && ball.x - ball.radius <= block.x + block.width)
         {
-          if(block.x <= ball.x + ball.radius && ball.x - ball.radius <= block.x + block.width)
-          {
-            // ブロックから見た時のめりこみ量
-            // 浅いほうがボールとの距離が近い
-            let overlapLeft = (ball.x + ball.radius) - block.x;
-            let overlapRight = (block.x + block.width) - (ball.x - ball.radius);
-            let overlapTop = (ball.y + ball.radius) - block.y;
-            let overlapBottom = (block.y + block.height) - (ball.y - ball.radius);
+          block.takeDamage(1);
+          
+          // ブロックから見た時のめりこみ量
+          // 浅いほうがボールとの距離が近い
+          let overlapLeft = (ball.x + ball.radius) - block.x;
+          let overlapRight = (block.x + block.width) - (ball.x - ball.radius);
+          let overlapTop = (ball.y + ball.radius) - block.y;
+          let overlapBottom = (block.y + block.height) - (ball.y - ball.radius);
 
-            let minOverlap = Math.min(overlapLeft, overlapRight, overlapTop, overlapBottom);
-            switch(minOverlap)
-            {
-              case overlapTop:
-              case overlapBottom:
-                ball.reflection(360 - ball.degrees);
-                this.blocks.splice(i, 1);
-                break;
-              case overlapLeft:
-              case overlapRight:
-                ball.reflection(180 - ball.degrees);
-                this.blocks.splice(i, 1);
-                break;
-            }
-            break;
+          let minOverlap = Math.min(overlapLeft, overlapRight, overlapTop, overlapBottom);
+          switch(minOverlap)
+          {
+            case overlapTop:
+            case overlapBottom:
+              ball.reflection(360 - ball.degrees);
+              break;
+            case overlapLeft:
+            case overlapRight:
+              ball.reflection(180 - ball.degrees);
+              break;
           }
+          // ブロックの消去
+          if(block.hp === 0)
+          {
+            this.blocks.splice(i, 1);
+          }
+          break;
+          
         }
       }
     }
@@ -141,7 +143,7 @@ export class GameController
 
       this.ball.move();
 
-      this.hitPaddle(this.ball);
+      this.hitPaddle(this.paddle, this.ball);
       this.hitBlocks(this.ball);
 
       this.draw();
