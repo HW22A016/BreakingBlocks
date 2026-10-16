@@ -8,7 +8,13 @@ export class Paddle
         this.height = height;
         this.speed = speed;
         this.color = color;
-        this.canvasWidth = canvasWidth - width;
+        this.canvasWidth = canvasWidth;
+    }
+
+    setWidth(addWidth)
+    {
+        this.width += addWidth;
+        this.x -= addWidth / 2;
     }
 
     draw(ctx)
@@ -37,9 +43,9 @@ export class Paddle
         if(direction === "right")
         {
             this.x += this.speed;
-            if(this.canvasWidth < this.x)
+            if(this.canvasWidth < this.x + this.width)
             {
-                this.x = this.canvasWidth;
+                this.x = this.canvasWidth - this.width;
             }
         }
     }

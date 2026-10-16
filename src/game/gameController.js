@@ -82,7 +82,17 @@ export class GameController
       return degrees;
     }
 
-    hitPaddle(paddle, ball)
+    // ボールがパドルに当たった時の処理
+    collectedBall(paddle, ball, hit)
+    {
+      if(hit)
+      {
+        ball.reflection(this.calculationPaddleReflectionDegrees(ball));
+        // ball.y = paddle.y - 10;
+      }
+    }
+
+    hitBall(paddle, ball)
     {
       // paddleと高さが同じか
       if(paddle.y <= ball.y + ball.radius && ball.y + ball.radius <=  paddle.y + paddle.height)
@@ -90,54 +100,94 @@ export class GameController
         // paddleの長さと同じx座標にballがあるか
         if(paddle.x - this.paddleHitboxMargin <= ball.x && ball.x <= paddle.x + paddle.width + this.paddleHitboxMargin)
         {
-          ball.reflection(this.calculationPaddleReflectionDegrees(ball));
-          ball.y = paddle.y - 10;
+          return true;
         }
+        return false;
       }
     }
 
-    hitBlocks(ball)
+    // ボールがブロックに当たった時の処理
+    collectedBlock()
     {
-      for(let i = this.blocks.length - 1; 0 <= i; i--)
+      
+    }
+
+    getBlockReflectionAngle(ball, block)
+    {
+      // ブロックから見た時のめりこみ量
+      // 浅いほうがボールとの距離が近い
+      let overlapLeft = (ball.x + ball.radius) - block.x;
+      let overlapRight = (block.x + block.width) - (ball.x - ball.radius);
+      let overlapTop = (ball.y + ball.radius) - block.y;
+      let overlapBottom = (block.y + block.height) - (ball.y - ball.radius);
+
+      let minOverlap = Math.min(overlapLeft, overlapRight, overlapTop, overlapBottom);
+      switch(minOverlap)
       {
-        let block = this.blocks[i];
+        case overlapTop:
+        case overlapBottom:
+          return 360;
+        case overlapLeft:
+        case overlapRight:
+          return 180;
+      }
+    }
+
+    destroyBlock(block, index)
+    {
+      this.blocks.splice(index, 1);
+      const item = this.items.find(item => item.id === block.id);
+      if(item)
+      {
+        item.setActive(true);
+      }
+    }
+
+    hitBlock(ball, blocks)
+    {
+      for(let i = blocks.length - 1; 0 <= i; i--)
+      {
+        let block = blocks[i];
         if(block.y <= ball.y + ball.radius && ball.y - ball.radius <= block.y + block.height && block.x <= ball.x + ball.radius && ball.x - ball.radius <= block.x + block.width)
         {
           block.takeDamage(1);
           
-          // ブロックから見た時のめりこみ量
-          // 浅いほうがボールとの距離が近い
-          let overlapLeft = (ball.x + ball.radius) - block.x;
-          let overlapRight = (block.x + block.width) - (ball.x - ball.radius);
-          let overlapTop = (ball.y + ball.radius) - block.y;
-          let overlapBottom = (block.y + block.height) - (ball.y - ball.radius);
-
-          let minOverlap = Math.min(overlapLeft, overlapRight, overlapTop, overlapBottom);
-          switch(minOverlap)
-          {
-            case overlapTop:
-            case overlapBottom:
-              ball.reflection(360 - ball.degrees);
-              break;
-            case overlapLeft:
-            case overlapRight:
-              ball.reflection(180 - ball.degrees);
-              break;
-          }
+          ball.reflection(this.getBlockReflectionAngle(ball, block) - ball.degrees);
+          
           // ブロックの消去
           if(block.hp === 0)
           {
-            this.blocks.splice(i, 1);
-            const item = this.items.find(item => item.id === block.id)
-            if(item)
-            {
-              item.setActive(true);
-            }
+            this.destroyBlock(block, i);
           }
           break;
-          
         }
       }
+    }
+
+    // paddleにitemが当たった時の処理
+    collectedItems()
+    {
+      const collectedItems = this.hitItems(this.paddle, this.items);
+      for(let i = 0; i < collectedItems.length; i++)
+      {
+        this.paddle.setWidth(this.canvas.width / 10);
+      }
+      this.items = this.items.filter(item => !collectedItems.includes(item));
+    }
+    
+    // 当たったアイテムを配列で返す
+    hitItems(paddle, items)
+    {
+      const hitItems = [];
+      for(let i = items.length - 1; 0 <= i; i--)
+      {
+        const item = items[i];
+        if(paddle.y <= item.y + item.radius && item.y - item.radius <= paddle.y + paddle.height && paddle.x <= item.x + item.radius && item.x - item.radius <= paddle.x + paddle.width)
+        {
+          hitItems.push(item);
+        }
+      }
+      return hitItems
     }
 
     gameLoop()
@@ -158,8 +208,9 @@ export class GameController
         this.items[i].move();
       }
 
-      this.hitPaddle(this.paddle, this.ball);
-      this.hitBlocks(this.ball);
+      this.collectedBall(this.paddle, this.ball, this.hitBall(this.paddle, this.ball));
+      this.hitBlock(this.ball, this.blocks);
+      this.collectedItems();
 
       this.draw();
 
