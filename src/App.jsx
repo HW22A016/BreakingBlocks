@@ -8,6 +8,7 @@ import { GameController } from "./game/gameController";
 import { Paddle } from "./game/paddle";
 import { Ball } from "./game/ball";
 import { Block } from './game/block';
+import { Item } from './game/item';
 
 function App() {
   // canvasRef = { current: null};を作る
@@ -16,6 +17,7 @@ function App() {
   const paddleRef = useRef(null);
   const ballRef = useRef(null);
   const blocksRef = useRef([]);
+  const itemsRef = useRef([]);
 
   // Startみたいなもの
   useEffect(() => {
@@ -47,9 +49,10 @@ function App() {
     // blockClass
     if(blocksRef.current.length === 0)
     {
+      let id = 1;
       const rows = Math.round(canvas.width / 80);
       const cols = Math.round(canvas.height / 30);
-      const blockHeight = 10;
+      const blockHeight = canvas.height / 60;
       // 間の空白
       const gap = 3;
 
@@ -67,15 +70,35 @@ function App() {
         {
           const y = startY + j * (blockHeight + gap);
           const hp = Math.floor(Math.random() * 2 + 1);
-          blocksRef.current.push(new Block(x, y, blockWidth, blockHeight, hp));
+          blocksRef.current.push(new Block(id, x, y, blockWidth, blockHeight, hp));
+          id++;
         }
+      }
+    }
+
+    if(itemsRef.current.length === 0)
+    {
+      const blocks = blocksRef.current;
+      for(let i = 0; i < blocks.length; i++)
+      {
+        if(0.2 < Math.random())
+        {
+          continue;
+        }
+        const block = blocks[i];
+        const id = block.id;
+        const x = block.x + block.width / 2;
+        const y = block.y + block.height / 2;
+        const speed = canvas.height / 300;
+        const radius = block.height / 2;
+        itemsRef.current.push(new Item(id, x, y, radius, speed, "yellow"));
       }
     }
     
     // gameControllerClass
     if(!gameControllerRef.current)
     {
-      gameControllerRef.current = new GameController(canvas, paddleRef.current, ballRef.current, blocksRef.current, "black");
+      gameControllerRef.current = new GameController(canvas, paddleRef.current, ballRef.current, blocksRef.current, itemsRef.current, "black");
     }
 
     gameControllerRef.current.start();

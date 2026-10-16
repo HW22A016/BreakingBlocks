@@ -1,13 +1,14 @@
 export class GameController
 {
-    constructor(canvas, paddle, ball, block, color)
+    constructor(canvas, paddle, ball, blocks, items, color)
     {
         this.canvas = canvas;
         this.ctx = canvas.getContext("2d");
         this.paddle = paddle;
         this.paddleHitboxMargin = 10;
         this.ball = ball;
-        this.blocks = block;
+        this.blocks = blocks;
+        this.items = items;
         this.color = color;
 
         this.keys = {
@@ -55,6 +56,11 @@ export class GameController
         for(let i = this.blocks.length - 1; 0 <= i; i--)
         {
           this.blocks[i].draw(this.ctx);
+        }
+
+        for(let i = this.items.length - 1; 0 <= i; i--)
+        {
+          this.items[i].draw(this.ctx);
         }
 
         // paddleの描画
@@ -122,6 +128,11 @@ export class GameController
           if(block.hp === 0)
           {
             this.blocks.splice(i, 1);
+            const item = this.items.find(item => item.id === block.id)
+            if(item)
+            {
+              item.setActive(true);
+            }
           }
           break;
           
@@ -142,6 +153,10 @@ export class GameController
       }
 
       this.ball.move();
+      for(let i = 0; i < this.items.length; i++)
+      {
+        this.items[i].move();
+      }
 
       this.hitPaddle(this.paddle, this.ball);
       this.hitBlocks(this.ball);

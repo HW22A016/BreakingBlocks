@@ -5,7 +5,7 @@ export class Ball
         this.x = x;
         this. y = y;
         this.radius = radius;
-        this. speed = speed;
+        this.speed = speed;
         this.degrees = degrees;
         this.radian = this.toRadian(degrees);
         this.atk = atk;

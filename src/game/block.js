@@ -1,7 +1,8 @@
 export class Block
 {
-    constructor(x, y, width, height, hp)
+    constructor(id, x, y, width, height, hp)
     {
+        this.id = id;
         this.x = x;
         this.y = y;
         this.width = width;
