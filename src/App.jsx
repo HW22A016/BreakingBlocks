@@ -18,6 +18,10 @@ function App() {
   const ballRef = useRef(null);
   const blocksRef = useRef([]);
   const itemsRef = useRef([]);
+  const ItemType = Object.freeze({
+    EXPAND_PADDLE: "expandPaddle",
+    SPLIT_BALL: "splitBall",
+  });
 
   // Startみたいなもの
   useEffect(() => {
@@ -81,7 +85,7 @@ function App() {
       const blocks = blocksRef.current;
       for(let i = 0; i < blocks.length; i++)
       {
-        if(0.2 < Math.random())
+        if(0.1 < Math.random())
         {
           continue;
         }
@@ -91,14 +95,21 @@ function App() {
         const y = block.y + block.height / 2;
         const speed = canvas.height / 300;
         const radius = block.height / 2;
-        itemsRef.current.push(new Item(id, x, y, radius, speed, "yellow"));
+        if(0.5 < Math.random())
+        {
+          itemsRef.current.push(new Item(id, x, y, radius, speed, "blue", ItemType.SPLIT_BALL))
+        }
+        else
+        {
+          itemsRef.current.push(new Item(id, x, y, radius, speed, "yellow", ItemType.EXPAND_PADDLE));
+        }
       }
     }
     
     // gameControllerClass
     if(!gameControllerRef.current)
     {
-      gameControllerRef.current = new GameController(canvas, paddleRef.current, ballRef.current, blocksRef.current, itemsRef.current, "black");
+      gameControllerRef.current = new GameController(canvas, paddleRef.current, ballRef.current, blocksRef.current, itemsRef.current, "black", ItemType);
     }
 
     gameControllerRef.current.start();

@@ -1,15 +1,17 @@
+import { Ball } from "./ball";
 export class GameController
 {
-    constructor(canvas, paddle, ball, blocks, items, color)
+    constructor(canvas, paddle, ball, blocks, items, color, ItemType)
     {
         this.canvas = canvas;
         this.ctx = canvas.getContext("2d");
         this.paddle = paddle;
         this.paddleHitboxMargin = 10;
-        this.ball = ball;
+        this.ball = [ball];
         this.blocks = blocks;
         this.items = items;
         this.color = color;
+        this.ItemType = ItemType;
 
         this.keys = {
             left: false,
@@ -65,7 +67,10 @@ export class GameController
 
         // paddleの描画
         this.paddle.draw(this.ctx);
-        this.ball.draw(this.ctx);
+        for(let i = 0; i < this.ball.length; i++)
+        {
+          this.ball[i].draw(this.ctx);
+        }
     }
 
     calculationPaddleReflectionDegrees(ball)
@@ -170,7 +175,24 @@ export class GameController
       const collectedItems = this.hitItems(this.paddle, this.items);
       for(let i = 0; i < collectedItems.length; i++)
       {
-        this.paddle.setWidth(this.canvas.width / 10);
+        // paddleに当たったitemTypeの分岐
+        switch(collectedItems[i].type)
+        {
+          case this.ItemType.EXPAND_PADDLE:
+            this.paddle.setWidth(this.canvas.width / 10);
+            break;
+          case this.ItemType.SPLIT_BALL:
+            const ballLength = this.ball.length;
+            for(let j = 0; j < ballLength; j++)
+            { 
+              let ball = this.ball[j];
+              this.ball.push(new Ball(ball.x, ball.y, ball.radius, ball.speed, Math.random() * 360, ball.atk, this.canvas.width, this.canvas.height));
+              console.log(ball.x, ball.y);
+              console.log(this.ball);
+            }
+            console.log("ballが分裂");
+            break;
+        }
       }
       this.items = this.items.filter(item => !collectedItems.includes(item));
     }
@@ -190,6 +212,20 @@ export class GameController
       return hitItems
     }
 
+    judgeBallOut(ball)
+    {
+      if(this.canvas.height <= ball.y)
+      {
+        return true;
+      }
+      return false;
+    }
+
+    destroyBall(index)
+    {
+      this.ball.splice(index, 1);
+    }
+
     gameLoop()
     {
       // paddleの移動入力
@@ -202,14 +238,22 @@ export class GameController
         this.paddle.move("right");
       }
 
-      this.ball.move();
+      for(let i = 0; i < this.ball.length; i++)
+      {
+        let ball = this.ball[i];
+        ball.move();
+        if(this.judgeBallOut(ball))
+        {
+          this.destroyBall(i);
+        }
+        this.collectedBall(this.paddle, ball, this.hitBall(this.paddle, ball));
+        this.hitBlock(ball, this.blocks);
+      }
       for(let i = 0; i < this.items.length; i++)
       {
         this.items[i].move();
       }
 
-      this.collectedBall(this.paddle, this.ball, this.hitBall(this.paddle, this.ball));
-      this.hitBlock(this.ball, this.blocks);
       this.collectedItems();
 
       this.draw();

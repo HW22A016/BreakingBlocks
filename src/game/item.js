@@ -1,6 +1,6 @@
 export class Item
 {
-    constructor(id, x, y, radius, speed, color)
+    constructor(id, x, y, radius, speed, color, type)
     {
         this.id = id;
         this.x = x;
@@ -9,6 +9,7 @@ export class Item
         this.speed = speed;
         this.color = color;
         this.active = false;
+        this.type = type;
     }
 
     setActive(bool)
