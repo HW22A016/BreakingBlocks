@@ -179,7 +179,7 @@ export class GameController
         switch(collectedItems[i].type)
         {
           case this.ItemType.EXPAND_PADDLE:
-            this.paddle.setWidth(this.canvas.width / 10);
+            this.paddle.setWidth(Math.min(this.canvas.width / 10, 30));
             break;
           case this.ItemType.SPLIT_BALL:
             const ballLength = this.ball.length;
@@ -187,10 +187,7 @@ export class GameController
             { 
               let ball = this.ball[j];
               this.ball.push(new Ball(ball.x, ball.y, ball.radius, ball.speed, Math.random() * 360, ball.atk, this.canvas.width, this.canvas.height));
-              console.log(ball.x, ball.y);
-              console.log(this.ball);
             }
-            console.log("ballが分裂");
             break;
         }
       }
