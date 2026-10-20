@@ -8,6 +8,7 @@ export class GameController
         this.paddle = paddle;
         this.paddleHitboxMargin = 10;
         this.ball = [ball];
+        this.maxBallLength = 16;
         this.blocks = blocks;
         this.items = items;
         this.color = color;
@@ -183,10 +184,21 @@ export class GameController
             break;
           case this.ItemType.SPLIT_BALL:
             const ballLength = this.ball.length;
+            let count = ballLength;
             for(let j = 0; j < ballLength; j++)
             { 
+              if(this.maxBallLength <= count)
+              {
+                break;
+              }
               let ball = this.ball[j];
-              this.ball.push(new Ball(ball.x, ball.y, ball.radius, ball.speed, Math.random() * 360, ball.atk, this.canvas.width, this.canvas.height));
+              let angle = Math.random() * 360;
+              while(175 < angle && angle < 185)
+              {
+                angle = Math.random() * 360;
+              }
+              this.ball.push(new Ball(ball.x, ball.y, ball.radius, ball.speed, angle, ball.atk, this.canvas.width, this.canvas.height));
+              count++;
             }
             break;
         }

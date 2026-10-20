@@ -1,5 +1,4 @@
-// アイテムの設置個数を決めたい場合はブロックをランダムに選択して選ばれたブロックの設置座標を入れるほうが良いかも
-// 列挙型を他のファイルに書くこともできるらしい
+// タイトルgameOver,gameClear,resetを作成する
 import { useEffect, useState, useRef} from 'react'
 import heroImg from './assets/hero.png'
 import reactLogo from './assets/react.svg'
@@ -32,9 +31,14 @@ function App() {
     // paddleClass
     if(!paddleRef.current)
     {
-      const width = Math.min(Math.round(canvas.width * 0.15), 100);
+      const maxPaddleWidth = 100;
+      const minMaxPaddleWidth = 40;
+      const width = Math.min(Math.max(Math.round(canvas.width * 0.15), minMaxPaddleWidth), maxPaddleWidth);
       const height = 10;
       const x = Math.round(canvas.width / 2);
+      // paddleの最低限の下の空間
+      const bottomMargin = 5;
+      const maxYPos = canvas.height - height - bottomMargin;
       // paddleの下が5 < yになるように計算
       const y = Math.min(Math.round(canvas.height * 0.93), canvas.height - height - 5);
       const speed = 5;
@@ -110,26 +114,33 @@ function App() {
     if(itemsRef.current.length === 0)
     {
       const blocks = blocksRef.current;
-      for(let i = 0; i < blocks.length; i++)
+      const blocksLength = blocks.length;
+      let expandPaddleNum = Math.round(blocksLength * 0.05);
+      let splitBallNum = Math.round(blocksLength * 0.3);
+      let sumItems = expandPaddleNum + splitBallNum;
+      while(0 < sumItems)
       {
-        if(0.1 < Math.random())
+        const id = Math.floor(Math.random() * blocksLength + 1);
+        if(itemsRef.current.some(item => item.id === id))
         {
           continue;
         }
-        const block = blocks[i];
-        const id = block.id;
+        const block = blocks[id - 1];
         const x = block.x + block.width / 2;
         const y = block.y + block.height / 2;
         const speed = Math.min((canvas.width + canvas.height) / 300, 2);
         const radius = block.height / 2;
-        if(0.5 < Math.random())
-        {
-          itemsRef.current.push(new Item(id, x, y, radius, speed, "blue", ItemType.SPLIT_BALL))
-        }
-        else
+        if(0 < expandPaddleNum)
         {
           itemsRef.current.push(new Item(id, x, y, radius, speed, "yellow", ItemType.EXPAND_PADDLE));
+          expandPaddleNum--;
         }
+        else if(0 < splitBallNum)
+        {
+          itemsRef.current.push(new Item(id, x, y, radius, speed, "blue", ItemType.SPLIT_BALL));
+          splitBallNum--;
+        }
+        sumItems--;
       }
     }
     
