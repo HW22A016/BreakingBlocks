@@ -1,12 +1,13 @@
 export class Block
 {
-    constructor(id, x, y, width, height, hp)
+    constructor(id, x, y, width, height, margin, hp)
     {
         this.id = id;
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
+        this.margin = margin / 2;
         this.hp = hp;
 
         this.type = null;

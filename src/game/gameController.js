@@ -152,7 +152,7 @@ export class GameController
       for(let i = blocks.length - 1; 0 <= i; i--)
       {
         let block = blocks[i];
-        if(block.y <= ball.y + ball.radius && ball.y - ball.radius <= block.y + block.height && block.x <= ball.x + ball.radius && ball.x - ball.radius <= block.x + block.width)
+        if(block.y - block.margin <= ball.y + ball.radius && ball.y - ball.radius <= block.y + block.height + block.margin && block.x - block.margin <= ball.x + ball.radius && ball.x - ball.radius <= block.x + block.width + block.margin)
         {
           block.takeDamage(ball.getATK());
           

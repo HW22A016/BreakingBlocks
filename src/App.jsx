@@ -107,7 +107,7 @@ function App() {
       {
         const y = startY + j * (blockHeight + gap);
         const hp = Math.floor(Math.random() * 2 + 1);
-        blocksRef.current.push(new Block(id, x, y, blockWidth, blockHeight, hp));
+        blocksRef.current.push(new Block(id, x, y, blockWidth, blockHeight, gap, hp));
         id++;
       }
     }
