@@ -1,7 +1,7 @@
 import { Ball } from "./ball";
 export class GameController
 {
-    constructor(canvas, paddle, ball, blocks, items, color, ItemType)
+    constructor(canvas, paddle, ball, blocks, items, color, ItemType, onGameOver, onGameClaer)
     {
         this.canvas = canvas;
         this.ctx = canvas.getContext("2d");
@@ -13,6 +13,9 @@ export class GameController
         this.items = items;
         this.color = color;
         this.ItemType = ItemType;
+
+        this.onGameOver = onGameOver;
+        this.onGameClaer = onGameClaer;
 
         this.keys = {
             left: false,
@@ -267,6 +270,16 @@ export class GameController
 
       this.draw();
 
+      if(this.blocks.length === 0)
+      {
+        this.onGameClaer();
+        return;
+      }
+      if(this.ball.length === 0)
+      {
+        this.onGameOver();
+        return;
+      }
       requestAnimationFrame(() => this.gameLoop());
     }
 

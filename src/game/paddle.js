@@ -9,10 +9,16 @@ export class Paddle
         this.speed = speed;
         this.color = color;
         this.canvasWidth = canvasWidth;
+        this.maxWidth = canvasWidth / 4;
     }
 
     setWidth(addWidth)
     {
+        let width = this.width + addWidth;
+        if(this.maxWidth < width)
+        {
+            addWidth = this.maxWidth - this.width;
+        }
         this.width += addWidth;
         this.x -= addWidth / 2;
     }
