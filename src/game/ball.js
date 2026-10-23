@@ -16,6 +16,11 @@ export class Ball
         this.canvasHeight = canvasHeight;
     }
 
+    getATK()
+    {
+        return this.atk;
+    }
+
     toRadian(degrees)
     {
         return degrees * (Math.PI / 180)

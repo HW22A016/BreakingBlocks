@@ -91,16 +91,6 @@ export class GameController
       return degrees;
     }
 
-    // ボールがパドルに当たった時の処理
-    collectedBall(paddle, ball, hit)
-    {
-      if(hit)
-      {
-        ball.reflection(this.calculationPaddleReflectionDegrees(ball));
-        // ball.y = paddle.y - 10;
-      }
-    }
-
     hitBall(paddle, ball)
     {
       // paddleと高さが同じか
@@ -115,12 +105,16 @@ export class GameController
       }
     }
 
-    // ボールがブロックに当たった時の処理
-    collectedBlock()
+    // ボールがパドルに当たった時の処理
+    collectedBall(ball, hit)
     {
-      
+      if(hit)
+      {
+        ball.reflection(this.calculationPaddleReflectionDegrees(ball));
+      }
     }
 
+    // ブロックの反射角度を求める関数
     getBlockReflectionAngle(ball, block)
     {
       // ブロックから見た時のめりこみ量
@@ -142,6 +136,7 @@ export class GameController
       }
     }
 
+    // ブロックを削除する関数
     destroyBlock(block, index)
     {
       this.blocks.splice(index, 1);
@@ -159,7 +154,7 @@ export class GameController
         let block = blocks[i];
         if(block.y <= ball.y + ball.radius && ball.y - ball.radius <= block.y + block.height && block.x <= ball.x + ball.radius && ball.x - ball.radius <= block.x + block.width)
         {
-          block.takeDamage(1);
+          block.takeDamage(ball.getATK());
           
           ball.reflection(this.getBlockReflectionAngle(ball, block) - ball.degrees);
           
@@ -196,7 +191,7 @@ export class GameController
               }
               let ball = this.ball[j];
               let angle = Math.random() * 360;
-              while(175 < angle && angle < 185)
+              while(170 < angle && angle < 190)
               {
                 angle = Math.random() * 360;
               }
@@ -258,7 +253,7 @@ export class GameController
         {
           this.destroyBall(i);
         }
-        this.collectedBall(this.paddle, ball, this.hitBall(this.paddle, ball));
+        this.collectedBall(ball, this.hitBall(this.paddle, ball));
         this.hitBlock(ball, this.blocks);
       }
       for(let i = 0; i < this.items.length; i++)

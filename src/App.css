@@ -27,7 +27,8 @@
   -webkit-text-stroke: clamp(2px, 1vw, 100px) white;
   color: red;
   paint-order: stroke;
-  margin-top: clamp(0px, 50vh, 600px);
+  /* margin-top: clamp(0px, 50vh, 600px); */
+  line-height: 1;
 }
 
 .gameClear
@@ -36,15 +37,17 @@
   -webkit-text-stroke: clamp(2px, 1vw, 100px) white;
   color: green;
   paint-order: stroke;
+  line-height: 1;
 }
 
 .button
 {
+  display: block;
   width: 200px;
   /* 上下の余白 */
   padding: 12px 0;
   /* 中央に配置 */
-  margin: 0 auto;
+  margin: 16px auto 0 auto;
   font-size: 18px;
   font-weight: bold;
   background-color: #333;

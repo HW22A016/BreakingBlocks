@@ -1,4 +1,3 @@
-// タイトルgameOver,gameClear,resetを作成する
 import { useEffect, useState, useRef} from 'react'
 import heroImg from './assets/hero.png'
 import reactLogo from './assets/react.svg'
@@ -114,6 +113,20 @@ function App() {
     }
   }
 
+  function reset(canvas)
+  {
+    const ctx = canvas.getContext("2d");
+    // キャンバスの背景
+    ctx.fillStyle = "white";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    gameControllerRef.current = null;
+    paddleRef.current = null;
+    ballRef.current = null;
+    blocksRef.current = [];
+    itemsRef.current = [];
+    loopLock.current = false;
+  }
+
   function setItems(canvas, blocks)
   {
     const blocksLength = blocks.length;
@@ -221,11 +234,47 @@ function App() {
           {scene === sceneType.GAMEOVER && (
             <div>
               <h1 className='gameOver'>GAMEOVER</h1>
+              <button
+                onClick={() => {
+                  reset(canvasRef.current);
+                  setScene(sceneType.TITLE);
+                }}
+                className='button'
+              >
+                TITLE
+              </button>
+              <button
+                onClick={() => {
+                  reset(canvasRef.current);
+                  setScene(sceneType.PLAY);
+                }}
+                className='button'
+              >
+                PLAY
+              </button>
             </div>
           )}
           {scene === sceneType.GAMECLEAR && (
             <div>
               <h1 className='gameClear'>GAMECLEAR</h1>
+              <button
+                onClick={() => {
+                  reset(canvasRef.current);
+                  setScene(sceneType.TITLE);
+                }}
+                className='button'
+              >
+                TITLE
+              </button>
+              <button
+                onClick={() => {
+                  reset(canvasRef.current);
+                  setScene(sceneType.PLAY);
+                }}
+                className='button'
+              >
+                PLAY
+              </button>
             </div>
           )}
         </div>
