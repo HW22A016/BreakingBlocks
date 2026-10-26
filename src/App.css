@@ -56,3 +56,11 @@
   border-radius: 25px;
   cursor: pointer;
 }
+
+@media(prefers-color-scheme: dark)
+{
+  .title
+  {
+    color: white;
+  }
+}
