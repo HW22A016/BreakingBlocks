@@ -60,16 +60,10 @@ export class GameController
       }
     }
 
-    handlePointerUp(e)
+    handlePointerUp()
     {
-      if(e.clientX < this.halfCanvas)
-      {
-        this.keys.left = false;
-      }
-      if(this.halfCanvas < e.clientX)
-      {
-        this.keys.right = false;
-      }
+      this.keys.left = false;
+      this.keys.right = false;
     }
 
     // 背景

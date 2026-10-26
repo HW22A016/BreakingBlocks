@@ -55,7 +55,7 @@ function App() {
     const x = canvas.width / 2;
     const y = canvas.height - 60;
     const radius = 6;
-    const speed = Math.min(Math.round(((canvas.width + canvas.height) / 2) / 130), 6);
+    const speed = Math.min(Math.round(canvas.height / 130), 6);
     const degree = Math.random() * (135 - 45) + 45;
     const atk = 1;
     return new Ball(x, y, radius, speed, degree, atk, canvas.width, canvas.height);
