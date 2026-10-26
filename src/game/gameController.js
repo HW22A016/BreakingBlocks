@@ -4,6 +4,7 @@ export class GameController
     constructor(canvas, paddle, ball, blocks, items, color, ItemType, onGameOver, onGameClaer)
     {
         this.canvas = canvas;
+        this.halfCanvas = canvas.width / 2;
         this.ctx = canvas.getContext("2d");
         this.paddle = paddle;
         this.paddleHitboxMargin = 10;
@@ -23,25 +24,49 @@ export class GameController
         };
     }
 
-    handleKeyDown(event)
+    handleKeyDown(e)
     {
-      if(event.key === "ArrowLeft")
+      if(e.key === "ArrowLeft")
       {
         this.keys.left = true;
       }
-      if(event.key === "ArrowRight")
+      if(e.key === "ArrowRight")
       {
         this.keys.right = true;
       }
     }
 
-    handleKeyUp(event)
+    handleKeyUp(e)
     {
-      if(event.key === "ArrowLeft")
+      if(e.key === "ArrowLeft")
       {
         this.keys.left = false;
       }
-      if(event.key === "ArrowRight")
+      if(e.key === "ArrowRight")
+      {
+        this.keys.right = false;
+      }
+    }
+
+    handlePointerDown(e)
+    {
+      if(e.clientX < this.halfCanvas)
+      {
+        this.keys.left = true;
+      }
+      if(this.halfCanvas < e.clientX)
+      {
+        this.keys.right = true;
+      }
+    }
+
+    handlePointerUp(e)
+    {
+      if(e.clientX < this.halfCanvas)
+      {
+        this.keys.left = false;
+      }
+      if(this.halfCanvas < e.clientX)
       {
         this.keys.right = false;
       }
@@ -280,14 +305,22 @@ export class GameController
 
     start()
     {
-        window.addEventListener("keydown", this.handleKeyDown.bind(this));
-        window.addEventListener("keyup", this.handleKeyUp.bind(this));
-        this.gameLoop();
+      // キーボード入力
+      window.addEventListener("keydown", this.handleKeyDown.bind(this));
+      window.addEventListener("keyup", this.handleKeyUp.bind(this));
+      // タッチ入力
+      window.addEventListener("pointerdown", this.handlePointerDown.bind(this));
+      window.addEventListener("pointerup", this.handlePointerUp.bind(this));
+      this.gameLoop();
     }
 
     stop()
     {
-        window.removeEventListener("keydown", this.handleKeyDown.bind(this));
-        window.removeEventListener("keyup", this.handleKeyUp.bind(this));
+      // キーボード入力
+      window.removeEventListener("keydown", this.handleKeyDown.bind(this));
+      window.removeEventListener("keyup", this.handleKeyUp.bind(this));
+      // タッチ入力
+      window.removeEventListener("pointerdown", this.handlePointerDown.bind(this));
+      window.removeEventListener("pointerup", this.handlePointerUp.bind(this));
     }
 }
