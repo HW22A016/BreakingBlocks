@@ -22,6 +22,8 @@ export class GameController
             left: false,
             right: false
         };
+
+        this.activePointers = {};
     }
 
     handleKeyDown(e)
@@ -48,22 +50,38 @@ export class GameController
       }
     }
 
+    // タップ入力
     handlePointerDown(e)
     {
-      if(e.clientX < this.halfCanvas)
-      {
-        this.keys.left = true;
-      }
-      if(this.halfCanvas < e.clientX)
-      {
-        this.keys.right = true;
-      }
+      this.activePointers[e.pointerId] = e.offsetX;
+      this.jugePointerKey(this.activePointers, this.halfCanvas);
     }
 
-    handlePointerUp()
+    handlePointerUp(e)
     {
-      this.keys.left = false;
-      this.keys.right = false;
+      delete this.activePointers[e.pointerId];
+      this.jugePointerKey(this.activePointers, this.halfCanvas);
+    }
+
+    jugePointerKey(activePointers, center)
+    {
+      let left = false;
+      let right = false;
+      for(const id in activePointers)
+      {
+        const offsetX = activePointers[id];
+        if(offsetX < center)
+        {
+          left = true;
+        }
+        if(center < offsetX)
+        {
+          right = true;
+        }
+      }
+
+      this.keys.left = left;
+      this.keys.right = right;
     }
 
     // 背景
@@ -305,6 +323,7 @@ export class GameController
       // タッチ入力
       window.addEventListener("pointerdown", this.handlePointerDown.bind(this));
       window.addEventListener("pointerup", this.handlePointerUp.bind(this));
+      window.addEventListener("pointercancel", this.handlePointerUp.bind(this));
       this.gameLoop();
     }
 
@@ -316,5 +335,6 @@ export class GameController
       // タッチ入力
       window.removeEventListener("pointerdown", this.handlePointerDown.bind(this));
       window.removeEventListener("pointerup", this.handlePointerUp.bind(this));
+      window.addEventListener("pointercancel", this.handlePointerUp.bind(this));
     }
 }
