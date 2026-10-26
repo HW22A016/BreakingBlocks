@@ -117,7 +117,7 @@ function App() {
   {
     const ctx = canvas.getContext("2d");
     // キャンバスの背景
-    ctx.fillStyle = "white";
+    ctx.fillStyle = window.matchMedia('(prefers-color-scheme: dark)').matches ? "black" : "white";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     gameControllerRef.current = null;
     paddleRef.current = null;
