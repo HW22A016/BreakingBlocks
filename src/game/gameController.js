@@ -119,7 +119,7 @@ export class GameController
     hitBall(paddle, ball)
     {
       // paddleと高さが同じか
-      if(paddle.y <= ball.y + ball.radius && ball.y + ball.radius <=  paddle.y + paddle.height)
+      if(paddle.y <= ball.y + ball.radius && ball.y - ball.radius <=  paddle.y + paddle.height)
       {
         // paddleの長さと同じx座標にballがあるか
         if(paddle.x - this.paddleHitboxMargin <= ball.x && ball.x <= paddle.x + paddle.width + this.paddleHitboxMargin)
