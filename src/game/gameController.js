@@ -54,9 +54,17 @@ export class GameController
       {
         this.keys.left = true;
       }
+      else
+      {
+        this.keys.left = false;
+      }
       if(this.halfCanvas < e.clientX)
       {
         this.keys.right = true;
+      }
+      else
+      {
+        this.keys.right = false;
       }
     }
 
@@ -304,7 +312,7 @@ export class GameController
       window.addEventListener("keyup", this.handleKeyUp.bind(this));
       // タッチ入力
       window.addEventListener("pointerdown", this.handlePointerDown.bind(this));
-      window.addEventListener("pointerup", this.handlePointerUp.bind(this));
+      // window.addEventListener("pointerup", this.handlePointerUp.bind(this));
       this.gameLoop();
     }
 
